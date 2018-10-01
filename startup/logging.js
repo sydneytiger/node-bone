@@ -2,7 +2,7 @@ const winston = require('winston');
 require('winston-daily-rotate-file')
 require('express-async-errors');
 
-module.exports = function() {
+module.exports = () => {
     winston.handleExceptions(
         new winston.transports.Console({ colorize: true, prettyPrint: true }),
         new winston.transports.DailyRotateFile({ 

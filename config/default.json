@@ -1,0 +1,4 @@
+{
+    "authTokenKey": "",
+    "db": "localhost:27017/node_bone"
+}
