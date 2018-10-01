@@ -1,0 +1,32 @@
+{
+  "name": "node-bone",
+  "version": "1.0.0",
+  "description": "A seed node api project with user authentication implementation",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --watchAll --verbose --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sydneytiger/node-bone.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "jest",
+    "api",
+    "joi",
+    "mongodb",
+    "mongroose",
+    "jsonwebtoken",
+    "moment",
+    "fawn",
+    "bcrypt"
+  ],
+  "author": "Tiger Chen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sydneytiger/node-bone/issues"
+  },
+  "homepage": "https://github.com/sydneytiger/node-bone#readme"
+}
