@@ -1,16 +1,18 @@
 const winston = require('winston');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const authentication = require('../middleware/authentication');
 const express = require('express');
 const _ = require('lodash');
 const router = express.Router();
 const {User, validate} = require('../models/user');
 
-router.get('/list', async (req, res) => {
-    const users = await User.find();
+// check logged in user details
+router.get('/myself', authentication, async (req, res) => {
+    const users = await User.findById(req.user._id).select(['-password', '-registeredDate', '-isAdmin']);
     res.send(users);
 });
 
+// create a new login user.
 router.post('/', async (req, res) => {
     const { error } = validate(req.body);
     if(error) {

@@ -34,8 +34,14 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    isAdmin: Boolean,
-    isVip: Boolean
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+    isVip: {
+        type: Boolean,
+        default: false
+    }
 });
 
 userSchema.methods.generateAuthToken = function() {
