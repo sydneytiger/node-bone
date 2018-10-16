@@ -4,10 +4,10 @@ const config = require('config');
 // middleware checking if a user is authenticated
 module.exports = (req, res, next) => {
     const token = req.header('x-auth-token');
-    console.log({token});
     if(!token) return res.status(401).send('No token proivde');
 
     try{
+        console.log({token});
         const decode = jwt.verify(token, config.get('authTokenKey'));
         req.user = decode;
         next();

@@ -12,6 +12,7 @@ describe('/api/users', () => {
         it('should return 401 if no token is provided', async () => {
             const res = await request(server).get('/api/users/myself');
             expect(res.status).toEqual(401);
+            expect(res.text).toEqual('No token proivde');
         });
 
         it('should return 400 with invalid toekn', async () => {
@@ -19,6 +20,7 @@ describe('/api/users', () => {
                 .get('/api/users/myself')
                 .set('x-auth-token', '1');
             expect(res.status).toEqual(400);
+            expect(res.text).toEqual('Invalid token');
         });
 
         // it('should return login user object without password');
