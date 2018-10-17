@@ -68,9 +68,8 @@ describe('user model', () => {
     });
 
     it('should error when firstName is less then 3 characters', () => {
-        //user.firstName = '123';
+        user.firstName = '12';
         const { error } = validate(user);
-        console.log({error});
         expect(error).toBeDefined();
     });
 });
