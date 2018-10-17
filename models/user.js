@@ -52,8 +52,12 @@ userSchema.methods.generateAuthToken = function() {
             lastName:this.lastName, 
             email:this.email, 
             isAdmin: this.isAdmin, 
-            isVip: this.isVip}, 
-        config.get('authTokenKey'));
+            isVip: this.isVip
+        }, 
+        config.get('authTokenKey'),
+        {
+            expiresIn: '10m'
+        });
     return token;
 }
 

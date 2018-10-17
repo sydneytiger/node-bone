@@ -7,7 +7,6 @@ module.exports = (req, res, next) => {
     if(!token) return res.status(401).send('No token proivde');
 
     try{
-        console.log({token});
         const decode = jwt.verify(token, config.get('authTokenKey'));
         req.user = decode;
         next();
