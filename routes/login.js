@@ -13,16 +13,16 @@ router.post('/', async (req, res) => {
     const {error} = validateLoginModel(loginModel);
     if(error)
     {
-        winston.info(error.message, error);
-        res.status(400).send('Invalid login');
+        winston.info(error.message);
+        return res.status(400).send('Invalid login');
     }
 
     const user = await User.findOne({email: loginModel.email});
-    if(!user) res.status(400).send('Invalid user')
+    if(!user) return res.status(400).send('Invalid user');
     
 
     const isValidPassword = await bcrypt.compare(loginModel.password, user.password);
-    if(!isValidPassword) res.status(400).send('invalid password');
+    if(!isValidPassword) return res.status(400).send('Invalid password');
 
     const token = user.generateAuthToken();
 
@@ -40,4 +40,5 @@ function validateLoginModel(login) {
     return Joi.validate(login, joiSchema);
 }
 
-module.exports = router;
+module.exports.login = router;
+module.exports.validate = validateLoginModel;

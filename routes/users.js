@@ -26,7 +26,6 @@ router.post('/', async (req, res) => {
     user = new User(_.pick(req.body, ['_id', 'firstName', 'lastName', 'email', 'isAdmin', 'isVip']));
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(req.body.password, salt);
-    debugger;
     await user.save();
 
     const token = user.generateAuthToken();
