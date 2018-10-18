@@ -23,14 +23,15 @@ router.post('/', async (req, res) => {
     let user = await User.findOne({email: req.body.email});
     if(user) return res.status(400).send('User already registered');
 
-    user = new User(_.pick(req.body, ['firstName', 'lastName', 'email', 'password']));
-    const salt = await bcrypt.genSalt(8);
-    user.password = await bcrypt.hash(user.password, salt);
+    user = new User(_.pick(req.body, ['_id', 'firstName', 'lastName', 'email', 'isAdmin', 'isVip']));
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(req.body.password, salt);
+    debugger;
     await user.save();
 
     const token = user.generateAuthToken();
     winston.info(token);
-    res.header('x-auth-token', token).send(_.pick(user, ['_id', 'firstName', 'lastName', 'email']));
+    res.header('x-auth-token', token).send(_.pick(user, ['_id', 'firstName', 'lastName', 'email', 'isAdmin', 'isVip']));
 });
 
 module.exports = router;

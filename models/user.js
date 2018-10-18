@@ -61,15 +61,6 @@ userSchema.methods.generateAuthToken = function() {
     return token;
 }
 
-userSchema.statics.isEmailRegistered = async function(email) {
-    const user = await this.findOne({
-        'email':email
-    });
-
-    console.log(user);
-    return user ? true : false;
-}
-
 const User = mongoose.model('User', userSchema);
 
 function validateUser(user) {
@@ -78,6 +69,8 @@ function validateUser(user) {
         lastName: Joi.string().min(3).max(50).required(),
         email: Joi.string().min(5).max(255).required().email(),
         password: Joi.string().min(5).max(255).required(),
+        isVip: Joi.boolean(),
+        isAdmin: Joi.boolean()
     };
 
     return Joi.validate(user, joiSchema);
