@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const config = require('config');
-const moment = require('moment');
+const {
+    profileSchema
+} = require('./profile');
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -41,21 +43,22 @@ const userSchema = new mongoose.Schema({
     isVip: {
         type: Boolean,
         default: false
+    },
+    profile: {
+        type: profileSchema
     }
 });
 
-userSchema.methods.generateAuthToken = function() {
-    const token = jwt.sign(
-        {
-            _id: this._id, 
-            firstName:this.firstName, 
-            lastName:this.lastName, 
-            email:this.email, 
-            isAdmin: this.isAdmin, 
+userSchema.methods.generateAuthToken = function () {
+    const token = jwt.sign({
+            _id: this._id,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            isAdmin: this.isAdmin,
             isVip: this.isVip
-        }, 
-        config.get('authTokenKey'),
-        {
+        },
+        config.get('authTokenKey'), {
             expiresIn: '10m'
         });
     return token;
