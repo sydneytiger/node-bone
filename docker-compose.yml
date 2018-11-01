@@ -1,0 +1,12 @@
+version: '3'
+services:
+  web:
+    image: "riveryc/bone"
+    # source code for this image repoe come from "Get started with Docker Compose" on docker.com
+    ports:
+      - "8080:3000"
+      - "8888:3000"
+    environment:
+      - db=mongodb://nodeBoneUser:INGTiger666@ds143242.mlab.com:43242/tigernodejs
+      - AUTH_TOKEN_KEY=ksdieckxiebnbepoe
+    
