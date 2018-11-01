@@ -1,6 +1,6 @@
 const request = require('supertest');
-const {validate} = require('../routes/login');
-const {User} = require('../models/user');
+const {validate} = require('../../routes/login');
+const {User} = require('../../models/user');
 const bcrypt = require('bcrypt');
 
 describe('/api/login', () => {
@@ -77,7 +77,7 @@ describe('/api/login', () => {
         };
             
         beforeEach(() => {
-            server = require('../index');
+            server = require('../../index');
             validLogin = {
                 email: 'validUser@email.com',
                 password: '12345'
