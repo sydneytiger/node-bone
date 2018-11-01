@@ -1,7 +1,9 @@
-const  winston = require('winston');
+const winston = require('winston');
 const express = require('express');
+const helmet = require('helmet');
 const app = express();
 
+app.use(helmet());
 require('./startup/logging')();
 require('./startup/config')();
 require('./startup/db')();

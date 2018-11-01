@@ -1,4 +1,4 @@
 {
-    "authTokenKey": "hereissomething",
-    "db": "mongodb://localhost:27017/node_bone"
+    "authTokenKey": "",
+    "db": ""
 }

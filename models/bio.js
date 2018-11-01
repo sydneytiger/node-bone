@@ -25,3 +25,5 @@ const bioSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+
+exports.bioSchema = bioSchema;
