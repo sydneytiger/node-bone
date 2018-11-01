@@ -21,7 +21,7 @@ function validateProfile(profile) {
     const year = new Date().getFullYear();
     const schema = {
         dateOfBirth: Joi.date().max('now').required(),
-        gender: Joi.string().required(),
+        gender: Joi.string().valid('male', 'female'),
         yearStart: Joi.number().min(year - 40).max(year)
     };
 
