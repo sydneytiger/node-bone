@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const winston = require('winston');
 const bcrypt = require('bcrypt');
 const authentication = require('../middleware/authentication');
@@ -11,6 +12,10 @@ const {
 const {
     validate: profileValidate
 } = require('../models/profile');
+const {
+    Bio,
+    validate: bioValidate
+} = require('../models/bio');
 
 // check logged in user details
 router.get('/myself', authentication, async (req, res) => {
@@ -43,16 +48,16 @@ router.post('/', async (req, res) => {
     res.header('x-auth-token', token).send(_.pick(user, ['_id', 'firstName', 'lastName', 'email', 'isAdmin', 'isVip']));
 });
 
+// retrieve user profile details
 router.get('/profile', authentication, async (req, res) => {
-    debugger;
     const user = await User.findOne({
         _id: req.user._id
     });
     res.send(user.profile);
 });
 
+// create user profile
 router.post('/profile', authentication, async (req, res) => {
-    debugger;
     const {
         error
     } = profileValidate(req.body);
@@ -74,8 +79,8 @@ router.post('/profile', authentication, async (req, res) => {
     }
 });
 
+// update user profile
 router.put('/profile', authentication, async (req, res) => {
-    debugger;
     const {
         error
     } = profileValidate(req.body);
@@ -100,6 +105,60 @@ router.put('/profile', authentication, async (req, res) => {
         winston.error(ex.message);
         res.status(400).send('profile update fail');
     }
+
+});
+
+// retrieve user bios
+router.get('/bio', authentication, async (req, res) => {
+    const user = await User
+        .findOne({
+            _id: req.user._id
+        })
+        .populate('bio')
+        .select('bios');
+    const bioIds = user.bios.map(m => mongoose.Types.ObjectId(m));
+    const bios = await Bio.find({
+        _id: {
+            $in: bioIds
+        }
+    });
+    res.send(bios);
+});
+
+// create a user bio
+router.post('/bio', authentication, async (req, res) => {
+    const {
+        error
+    } = bioValidate(req.body);
+    if (error) {
+        winston.error(error.message);
+        return res.status(400).send('Invalid input');
+    }
+
+    try {
+        bio = new Bio(_.pick(req.body, ['_id', 'weight', 'bodyFatPercentage', 'chestCircumference', 'armCircumference', 'waistCircumference']));
+
+        await bio.save();
+        const user = await User.findOne({
+            _id: req.user._id
+        });
+        user.bios.push(bio);
+        user.save();
+        return res.send('bio create success');
+    } catch (ex) {
+        winston.error(ex.message);
+        res.status(400).send('bio create fail');
+    }
+
+});
+
+// update a user bio
+router.put('/bio', authentication, async (req, res) => {
+
+});
+
+// delete a user bio
+router.delete('/bio', authentication, async (req, res) => {
 
 });
 

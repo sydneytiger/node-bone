@@ -5,6 +5,9 @@ const config = require('config');
 const {
     profileSchema
 } = require('./profile');
+const {
+    Bio
+} = require('./bio');
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -46,7 +49,11 @@ const userSchema = new mongoose.Schema({
     },
     profile: {
         type: profileSchema
-    }
+    },
+    bios: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Bio'
+    }]
 });
 
 userSchema.methods.generateAuthToken = function () {
