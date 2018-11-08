@@ -153,8 +153,8 @@ router.post('/bio', authentication, async (req, res) => {
 });
 
 // update a user bio
-router.put('/bio', authentication, async (req, res) => {
-    if(!req.body._id){
+router.put('/bio/:id', authentication, async (req, res) => {
+    if(!req.params.id){
         winston.error('missing bio id when delete');
         return res.status(400).send('Invalid input');
     }
@@ -170,7 +170,7 @@ router.put('/bio', authentication, async (req, res) => {
     try{
         debugger;
         await User.findOneAndUpdate(
-            { '_id': req.user._id, 'bios._id': req.body._id },
+            { '_id': req.user._id, 'bios._id': req.params.id },
             { '$set': {
                 "bios.$":req.body
             }});
