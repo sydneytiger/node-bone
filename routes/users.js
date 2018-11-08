@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const winston = require('winston');
 const bcrypt = require('bcrypt');
 const authentication = require('../middleware/authentication');
@@ -110,18 +109,19 @@ router.put('/profile', authentication, async (req, res) => {
 
 // retrieve user bios
 router.get('/bio', authentication, async (req, res) => {
-    const user = await User
+    const bios = await User
         .findOne({
             _id: req.user._id
         })
         .populate('bio')
         .select('bios');
-    const bioIds = user.bios.map(m => mongoose.Types.ObjectId(m));
-    const bios = await Bio.find({
-        _id: {
-            $in: bioIds
-        }
-    });
+    // const bioIds = user.bios.map(m => mongoose.Types.ObjectId(m));
+    // const bios = await Bio.find({
+    //     _id: {
+    //         $in: bioIds
+    //     }
+    // });
+
     res.send(bios);
 });
 
@@ -136,14 +136,14 @@ router.post('/bio', authentication, async (req, res) => {
     }
 
     try {
-        bio = new Bio(_.pick(req.body, ['_id', 'weight', 'bodyFatPercentage', 'chestCircumference', 'armCircumference', 'waistCircumference']));
+        //bio = new Bio(_.pick(req.body, ['_id', 'weight', 'bodyFatPercentage', 'chestCircumference', 'armCircumference', 'waistCircumference']));
 
-        await bio.save();
+        //await bio.save();
         const user = await User.findOne({
             _id: req.user._id
         });
-        user.bios.push(bio);
-        user.save();
+        user.bios.push(req.body);
+        await user.save();
         return res.send('bio create success');
     } catch (ex) {
         winston.error(ex.message);
@@ -154,12 +154,50 @@ router.post('/bio', authentication, async (req, res) => {
 
 // update a user bio
 router.put('/bio', authentication, async (req, res) => {
+    if(!req.body._id){
+        winston.error('missing bio id when delete');
+        return res.status(400).send('Invalid input');
+    }
 
+    const {
+        error
+    } = bioValidate(req.body);
+    if (error) {
+        winston.error(error.message);
+        return res.status(400).send('Invalid input');
+    }
+
+    try{
+        debugger;
+        await User.findOneAndUpdate(
+            { '_id': req.user._id, 'bios._id': req.body._id },
+            { '$set': {
+                "bios.$":req.body
+            }});
+
+        return res.send('bio update success');
+    } catch(ex) {
+        winston.error(ex.message);
+        res.status(400).send('bio update fail');
+    }
 });
 
 // delete a user bio
-router.delete('/bio', authentication, async (req, res) => {
+router.delete('/bio/:id', authentication, async (req, res) => {
+    if(!req.params.id){
+        winston.error('missing bio id when delete');
+        return res.status(400).send('Invalid input');
+    }
 
+    try{
+        const user = await User.findOne({ _id: req.user._id });
+        user.bios.id(req.params.id).remove();
+        await user.save();
+        return res.send('bio remove success');
+    } catch (ex) {
+        winston.error(ex.message);
+        res.status(400).send('bio remove fail');
+    }
 });
 
 module.exports = router;
