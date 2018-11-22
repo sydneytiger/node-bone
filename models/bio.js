@@ -33,9 +33,9 @@ function validateBio(bio) {
     const schema = {
         weight: Joi.number().min(20).max(300).required(),
         bodyFatPercentage: Joi.number().min(0).max(100),
-        chestCircumference: Joi.number().min(0).max(1000),
+        chestCircumference: Joi.number().min(0).max(2000),
         armCircumference: Joi.number().min(0).max(1000),
-        waistCircumference: Joi.number().min(0).max(1000)
+        waistCircumference: Joi.number().min(0).max(2000)
     };
 
     return Joi.validate(bio, schema);
