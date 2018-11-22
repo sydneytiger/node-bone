@@ -61,3 +61,6 @@ typings/
 .next
 
 secret.sh
+
+.DS_Store
+docker-images/
